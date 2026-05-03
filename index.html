@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>JN Calc</title>
+<title>JN Calc | Joaquim Neto</title>
 
 <style>
 * {
@@ -20,7 +20,7 @@ body {
     height: 100vh;
 }
 
-/* ANIMAÇÃO DE ENTRADA */
+/* APP */
 .app {
     width: 320px;
     background: #121212;
@@ -30,6 +30,16 @@ body {
     animation: fadeInUp 0.6s ease;
 }
 
+/* TÍTULO */
+.title {
+    text-align: center;
+    color: #d4af37;
+    font-weight: bold;
+    margin-bottom: 10px;
+    letter-spacing: 2px;
+}
+
+/* ANIMAÇÃO */
 @keyframes fadeInUp {
     from {
         opacity: 0;
@@ -41,9 +51,10 @@ body {
     }
 }
 
-/* DISPLAY COM EFEITO */
+/* DISPLAY PREMIUM */
 .display {
-    background: #000;
+    background: linear-gradient(145deg, #000, #1a1a1a);
+    box-shadow: inset 0 0 10px rgba(255,255,255,0.05);
     color: #fff;
     font-size: 34px;
     text-align: right;
@@ -54,7 +65,7 @@ body {
     transition: all 0.2s ease;
 }
 
-/* FLASH AO CALCULAR */
+/* FLASH */
 .display.flash {
     animation: flash 0.3s ease;
 }
@@ -83,17 +94,19 @@ button {
     transition: all 0.15s ease;
 }
 
-/* HOVER + PRESS */
+/* HOVER PREMIUM */
 button:hover {
     background: #2c2c2c;
+    transform: translateY(-2px);
 }
 
+/* PRESS */
 button:active {
     transform: scale(0.92);
     box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
 }
 
-/* BOTÕES ESPECIAIS */
+/* ESPECIAIS */
 .operator {
     background: linear-gradient(135deg, #d4af37, #b8962e);
     color: black;
@@ -107,20 +120,28 @@ button:active {
     font-weight: bold;
 }
 
-/* GLOW AO CLICAR */
-button.glow {
-    box-shadow: 0 0 10px #d4af37;
-}
-
 .clear {
     background: #ff5252;
 }
 
+/* GLOW */
+button.glow {
+    box-shadow: 0 0 10px #d4af37;
+}
+
+/* FOOTER */
 .footer {
     text-align: center;
     margin-top: 15px;
     font-size: 11px;
     color: #777;
+}
+
+/* RESPONSIVO */
+@media (max-width: 400px) {
+    .app {
+        width: 95%;
+    }
 }
 </style>
 </head>
@@ -128,6 +149,9 @@ button.glow {
 <body>
 
 <div class="app">
+
+    <div class="title">JN CALC</div>
+
     <div id="display" class="display">0</div>
 
     <div class="buttons">
@@ -149,7 +173,7 @@ button.glow {
         <button onclick="press(this, '1')">1</button>
         <button onclick="press(this, '2')">2</button>
         <button onclick="press(this, '3')">3</button>
-        <button class="equal" onclick="calculate()">=</button>
+        <button class="equal" onclick="press(this, '='); calculate()">=</button>
 
         <button onclick="press(this, '0')">0</button>
         <button onclick="press(this, '.')">.</button>
@@ -167,7 +191,7 @@ let current = "";
 let operator = "";
 let previous = "";
 
-/* EFEITO DE CLIQUE */
+/* CLIQUE */
 function press(btn, value) {
     btn.classList.add("glow");
     setTimeout(() => btn.classList.remove("glow"), 150);
@@ -210,7 +234,7 @@ function calculate() {
         case "+": result = a + b; break;
         case "-": result = a - b; break;
         case "*": result = a * b; break;
-        case "/": result = a / b; break;
+        case "/": result = b === 0 ? "Erro" : a / b; break;
         case "%": result = a % b; break;
     }
 
@@ -229,7 +253,10 @@ document.addEventListener("keydown", (e) => {
     if (!isNaN(e.key) || e.key === ".") input(e.key);
     if (["+", "-", "*", "/", "%"].includes(e.key)) input(e.key);
     if (e.key === "Enter") calculate();
-    if (e.key === "Backspace") current = current.slice(0, -1), updateDisplay(current);
+    if (e.key === "Backspace") {
+        current = current.slice(0, -1);
+        updateDisplay(current || "0");
+    }
     if (e.key === "Escape") clearAll();
 });
 </script>
